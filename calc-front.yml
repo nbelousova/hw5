@@ -1,0 +1,6 @@
+- hosts:  front
+- roles:
+  - nginx
+  - letsencrypt
+  - calc-front
+

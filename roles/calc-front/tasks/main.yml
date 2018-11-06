@@ -1,0 +1,10 @@
+    - name: Clone  front app from github
+      git: 
+       repo: https://github.com/nbelousova/calc-front.git
+       dest: /srv
+    - name: Create nginx location conf
+      template: src=calc-front.location.nginx.j2 dest=/etc/nginx/site-enable/calc-front.location.conf
+    - name: Create app.js
+      template: src=app.js.j2 dest=/srv/www/app.js
+    - name: Create nginx sum location conf
+      template: src=sum.localion.conf.j2 dest=/etc/nginx/site-enable/calc-sum.location.conf

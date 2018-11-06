@@ -1,0 +1,19 @@
+server {
+
+       listen 443 ssl;
+       ssl_certificate /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem; 
+       ssl_certificate_key /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem; 
+         
+       server_name {{ inventory_hostname }};
+       include *.location.conf
+
+}
+
+server {
+
+       listen 80;
+       return 301 https://{{ inventory_hostname }};
+       server_name {{ inventory_hostname }};
+
+       root /srv/www;
+}

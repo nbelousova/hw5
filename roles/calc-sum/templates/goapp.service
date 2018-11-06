@@ -1,0 +1,7 @@
+[Unit]
+Description=goapp
+
+[Service]
+Type=simple
+ExecStart=/srv/main
+ExecStop=/bin/kill $MAINPID

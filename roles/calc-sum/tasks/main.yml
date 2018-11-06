@@ -1,0 +1,14 @@
+    - name: Installing go
+      apt: 
+        name: golang 
+    
+    - name: Clone calc-sum from github
+      git: 
+       repo: https://github.com/nbelousova/calc-sum.git
+       dest: /srv
+
+    - name: Create goapp service file
+      template: src=goapp.service dest=/etc/systemd/system/goapp.service
+
+    - name: Start goapp service
+      command: systemctl start goapp

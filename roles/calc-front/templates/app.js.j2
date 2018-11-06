@@ -1,0 +1,14 @@
+function getSum() {
+  var a = $("#a").val()
+  var b = $("#b").val()
+
+  console.log("Summing: " + a + " and " + b);
+
+  $.get("https://{{ front_domain }}/api/sum/?a=" + a + "&b=" + b, function( data ) {
+    $("body")
+      .append(" Status: " + data.Status)
+	  .append(" Result: " + data.Result + "<br>")
+    }, "json");
+
+}
+

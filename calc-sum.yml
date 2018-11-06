@@ -1,0 +1,3 @@
+- hosts: sum-api
+- roles: 
+  - calc-sum
