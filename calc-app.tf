@@ -39,7 +39,7 @@ resource "aws_instance" "calc_sum"{
   key_name        = "${var.key}"
   
   provisioner "local-exec" {
-   command = "echo ${aws_instance.calc_sum.public_ip} >> calc-api.hosts && ansible-playbook -i calc-api.hosts calc-sum.yml"
+   command = "echo ${aws_instance.calc_sum.public_ip} >> calc-api.hosts && ansible-playbook -i calc-api.hosts python.yml && ansible-playbook -i calc-api.hosts calc-sum.yml"
   }
 
 }
@@ -51,10 +51,8 @@ resource "aws_instance" "calc_front" {
   security_groups = ["${var.sg}"]
   key_name        = "${var.key}"
   
-  provisioner
-
   provisioner "local-exec" {
-    command = "echo ${aws_instance.calc_front.public_ip} >> calc-front.hosts && ansible-playbook -i calc-front.hosts calc-front.yml --extra-vars '{"front_domain":"${var.domain}.nbelousova.devops.srwx.net","api_host":"${aws_instance.calc_sum.private_ip}"}'"
+    command = "echo ${aws_instance.calc_front.public_ip} >> calc-front.hosts && ansible-playbook -i calc-front.hosts python.yml && ansible-playbook -i calc-front.hosts calc-front.yml --extra-vars '{"front_domain":"${var.domain}.nbelousova.devops.srwx.net","api_host":"${aws_instance.calc_sum.private_ip}"}'"
   }
 }
 
@@ -65,6 +63,12 @@ resource "aws_route53_record" "calc_front_dns" {
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.calc_front.public_address}"]
+
+  provsioner "local-exec" {
+    command = "ansble-playbook -i calc-front.hosts calc-ssl.yml --extra-vars '{"front_domain":"${var.domain}.nbelousova.devops.srwx.net"}'"
+
+ }
+
 }
 
 

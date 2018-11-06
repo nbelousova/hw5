@@ -9,17 +9,17 @@
   apt: name=python-certbot-nginx state=present
 
 - name: Get Let's Encrypt certificate
-  shell: certbot certonly -n --webroot -w /srv/www -d {{ inventory_hostname }} --agree-tos --email "{{ email }}"
-  creates: /etc/letsencrypt/live/{{ inventory_hostname }}
+  shell: certbot certonly -n --webroot -w /srv/www -d {{ front_domain }} --agree-tos --email "{{ email }}"
+  creates: /etc/letsencrypt/live/{{ front_domain }}
 
 - name: Remove site config
   file: path=/etc/nginx/sites-enabled/nginx.conf state=absent
 
 - name: Create SSL conf
-  template: src=ssl.nginx.conf.j2 dest=/etc/nginx/sites-available/{{ inventory_hostname }}.conf owner=root group=root mode=0644
+  template: src=ssl.nginx.conf.j2 dest=/etc/nginx/sites-available/{{ front_domain }}.conf owner=root group=root mode=0644
 
 - name: Create symbol link from sites-enabled
-  file: src=/etc/nginx/sites-available/{{ inventory_hostname }}.conf dest=/etc/nginx/sites-enabled/{{ inventory_hostname }}.conf state=link
+  file: src=/etc/nginx/sites-available/{{ front_domain }}.conf dest=/etc/nginx/sites-enabled/{{ front_domain }}.conf state=link
   notify: restart nginx
 
     - name: Add crontjob for renew cert
@@ -29,4 +29,4 @@
         hour: "0"
         day: "*/5"
         user: root
-        job: "/usr/bin/certbot certonly -n --webroot -w /srv/www -d {{ inventory_hostname }} --expand >> certbot.log && systemctl reload nginx"
+        job: "/usr/bin/certbot certonly -n --webroot -w /srv/www -d {{ front_domain }} --expand >> certbot.log && systemctl reload nginx"

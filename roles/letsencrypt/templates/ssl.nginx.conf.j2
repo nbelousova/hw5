@@ -1,10 +1,10 @@
 server {
 
        listen 443 ssl;
-       ssl_certificate /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem; 
-       ssl_certificate_key /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem; 
+       ssl_certificate /etc/letsencrypt/live/{{ front_domain }}/fullchain.pem; 
+       ssl_certificate_key /etc/letsencrypt/live/{{ front_domain }}/privkey.pem; 
          
-       server_name {{ inventory_hostname }};
+       server_name {{ front_domain }};
        include *.location.conf
 
 }
@@ -12,8 +12,8 @@ server {
 server {
 
        listen 80;
-       return 301 https://{{ inventory_hostname }};
-       server_name {{ inventory_hostname }};
+       return 301 https://{{ front_domain }};
+       server_name {{ front_domain }};
 
        root /srv/www;
 }
